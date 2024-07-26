@@ -19,6 +19,20 @@ const SavedBooks = () => {
     try {
       await removeBook({
         variables: { bookId },
+        update: (cache, { data: { removeBook } }) => {
+          const { me } = cache.readQuery({ query: GET_ME });
+          cache.writeQuery({
+            query: GET_ME,
+            data: {
+              me: {
+                ...me,
+                savedBooks: me.savedBooks.filter(
+                  (book) => book.bookId !== bookId
+                ),
+              },
+            },
+          });
+        },
       });
       removeBookId(bookId);
     } catch (err) {
@@ -30,9 +44,24 @@ const SavedBooks = () => {
     return <h2>LOADING...</h2>;
   }
 
+  if (!userData.savedBooks || userData.savedBooks.length === 0) {
+    return (
+      <>
+        <div className="text-light bg-dark p-5">
+          <Container>
+            <h1>Viewing {userData.username}'s books!</h1>
+          </Container>
+        </div>
+        <Container>
+          <h2>You have no saved books!</h2>
+        </Container>
+      </>
+    );
+  }
+
   return (
     <>
-      <div fluid className="text-light bg-dark p-5">
+      <div className="text-light bg-dark p-5">
         <Container>
           <h1>Viewing {userData.username}'s books!</h1>
         </Container>
