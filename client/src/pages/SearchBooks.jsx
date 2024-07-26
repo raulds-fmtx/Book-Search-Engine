@@ -49,9 +49,7 @@ const SearchBooks = () => {
     }
   };
 
-  const handleSaveBook = async (bookId) => {
-    const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
-
+  const handleSaveBook = async (book) => {
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
     if (!token) {
@@ -60,10 +58,10 @@ const SearchBooks = () => {
 
     try {
       await saveBook({
-        variables: { bookData: { ...bookToSave } },
+        variables: { bookData: book },
       });
 
-      setSavedBookIds([...getSavedBookIds(), bookToSave.bookId]);
+      setSavedBookIds([...getSavedBookIds(), book.bookId]);
     } catch (err) {
       console.error(err);
     }
@@ -118,7 +116,7 @@ const SearchBooks = () => {
                       <Button
                         disabled={savedBookIds?.some((savedBookId) => savedBookId === book.bookId)}
                         className='btn-block btn-info'
-                        onClick={() => handleSaveBook(book.bookId)}>
+                        onClick={() => handleSaveBook(book)}>
                         {savedBookIds?.some((savedBookId) => savedBookId === book.bookId)
                           ? 'This book has already been saved!'
                           : 'Save this Book!'}

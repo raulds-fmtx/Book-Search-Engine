@@ -42,7 +42,7 @@ const resolvers = {
       const updatedUser = await User.findByIdAndUpdate(
         user._id,
         { $addToSet: { savedBooks: bookData } },
-        { new: true, runValidators: true }
+        { new: true }
       ).populate('savedBooks');
 
       return updatedUser;

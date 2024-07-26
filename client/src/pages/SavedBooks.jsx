@@ -11,6 +11,8 @@ const SavedBooks = () => {
   const [removeBook] = useMutation(REMOVE_BOOK);
   const userData = data?.me || {};
 
+  console.log(userData);
+
   const handleDeleteBook = async (bookId) => {
     const token = Auth.loggedIn() ? Auth.getToken() : null;
     if (!token) {
@@ -75,7 +77,7 @@ const SavedBooks = () => {
             : "You have no saved books!"}
         </h2>
         <Row>
-          {userData.savedBooks.map((book) => {
+          {userData.savedBooks?.map((book) => {
             return (
               <Col md="4" key={book.bookId}>
                 <Card border="dark">
